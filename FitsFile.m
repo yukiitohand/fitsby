@@ -34,39 +34,33 @@ classdef FitsFile < dynamicprops
     end
 
     methods
-        function obj = FitsFile(varargin)
+        function obj = FitsFile(filename, dirpath)
             % Constructor of class FitsFile
             %
-            % Syntax
-            % ------
+            % Syntax:
             % fitsfile = FitsFile(filename);
             % fitsfile = FitsFile(filename, dirpath);
             % 
             % Without dirpath, filename is considered as the file path to the
             % file.
             %
-            % INPUTS
-            % ------
+            % Input Arguments:
             % filename: string | char
             %   Name of the file or file path.
             %
             % dirpath: string | char
             %   Directory of the file exist.
+            arguments
+                filename {mustBeTextScalar} = ""
+                dirpath {mustBeTextScalar} = ""
 
+            end
             import matlab.io.*;
-            p = inputParser;
-            errmsgv = " must be a string/char array representing a file";
-            addOptional(p, "filename", "", ...
-                @(x) assert(isstring(x) || ischar(x), "filename" + errmsgv));
 
-            addOptional(p, "dirpath", "", ...
-                @(x) assert(isstring(x) || ischar(x), "dirpath" + errmsgv));
-            
-            parse(p, varargin{:});
-            obj.filename = string(p.Results.filename);
-            obj.dirpath = string(p.Results.dirpath);
+            obj.filename = string(filename);
+            obj.dirpath = string(dirpath);
 
-            obj.filepath = fullfile(obj.dirpath, obj.filename);
+            obj.filepath = fullfile(dirpath, filename);
 
             if exist(obj.filepath, "file")
                obj.read();

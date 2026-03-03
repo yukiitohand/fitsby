@@ -38,7 +38,7 @@ classdef FitsHDU < handle
     end
 
     methods
-        function obj = FitsHDU(varargin)
+        function obj = FitsHDU(file, hdunum)
             % Constructor of FitsHDU.
             %
             % Syntax
@@ -58,28 +58,19 @@ classdef FitsHDU < handle
             %   If file is a file path, then you must give a positive HDU
             %   number.
             %
+            arguments
+                file = uint64(0)
+                hdunum (1, 1) {mustBeInteger, mustBeNonnegative} = 0
+            end
 
             import matlab.io.*;
 
             % Validate input arguments
             % ------------------------
-            p = inputParser;
-            errmsg_file = ...
+            assert(isstring(file) || ischar(file) || isa(file, "uint64"), ...
                 "file must be a string/char array representing a file " + ...
                 " path or a file pointer\nopened by fits.openFile or " + ...
-                "fits.openDiskFile";
-            addOptional(p, "file", uint64(0), ...
-                @(x) assert(isstring(x) || ischar(x) || isa(x, "uint64"), ...
-                            errmsg_file));
-
-            addOptional(p, "hdunum", 0, ...
-                @(x) assert(isinteger(x) || x >= 0, ...
-                            "hdunum must be a nonnegative integer."));
-
-            parse(p, varargin{:});
-            
-            file = p.Results.file;
-            hdunum = p.Results.hdunum;
+                "fits.openDiskFile");
             
             if isnumeric(file) && file == 0
                 obj.filepath = "";
