@@ -37,4 +37,4 @@ for IMAGE_HDU and
 ``` matlab
 >> fits_data.HDU(i).tbl
 ```
-for BINARY_TBL and ASCII_TBL. You can replace ``HDU(i)`` with ``(extname_)`` in any of the above examples.
+for BINARY_TBL and ASCII_TBL. You can replace ``HDU(i)`` with ``(extname_)`` in any of the above examples. Tables are loaded as MATLAB ``table`` objects. Refer https://www.mathworks.com/help/matlab/tables.html for the table objects.
