@@ -19,7 +19,7 @@ If you want to access an HDU by EXTNAME, then you can use an aliased property:
 ``` matlab
 >> fits_data.(extname_)
 ```
-where ``extname_`` is a string/char-vector of EXTNAME with white spaces replaced with underscores.
+where ``extname_`` is a string/char-vector of EXTNAME with white spaces replaced with underscores (to make it an acceptable property name).
 You can look at header contents in a MATLAB struct format by
 You can access HDU data by
 ``` matlab
@@ -37,4 +37,4 @@ for IMAGE_HDU and
 ``` matlab
 >> fits_data.HDU(i).tbl
 ```
-for BINARY_TBL and ASCII_TBL. You can replace ``HDU(i)`` with ``(extaname_)`` in any of the above examples.
+for BINARY_TBL and ASCII_TBL. You can replace ``HDU(i)`` with ``(extname_)`` in any of the above examples.
