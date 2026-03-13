@@ -15,11 +15,11 @@ All the HDUs will be loaded to property ``HDU`` in order of the HDUs defined in 
 ``` matlab
 >> fits_data.HDU(i)
 ```
-If you want to access an HDU by EXTNAME, then you can use an aliased property EXTNAME_ 
+If you want to access an HDU by EXTNAME, then you can use an aliased property:
 ``` matlab
->> fits_data.(EXTNAME_)
+>> fits_data.(extname_)
 ```
-where EXTNAME_ is a string/char-vector of EXTNAME with white spaces replaced with underscores.
+where ``extname_`` is a string/char-vector of EXTNAME with white spaces replaced with underscores.
 You can look at header contents in a MATLAB struct format by
 You can access HDU data by
 ``` matlab
@@ -37,4 +37,4 @@ for IMAGE_HDU and
 ``` matlab
 >> fits_data.HDU(i).tbl
 ```
-for BINARY_TBL and ASCII_TBL.
+for BINARY_TBL and ASCII_TBL. You can replace ``HDU(i)`` with ``(extaname_)`` in any of the above examples.
