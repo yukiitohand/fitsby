@@ -11,7 +11,6 @@ You just need class ``FitsFile`` to read and load all the header data units
 (HDU) in a reasonable structure.
 You do not need to know the structure of fits files, just HDUs are read and 
 loaded in order as found in the file.
-
 ``` matlab
 >> fits_data = FitsFile("a.fits");
 ```
