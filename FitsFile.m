@@ -12,17 +12,22 @@ classdef FitsFile < dynamicprops
     % ------
     % fitsfile = FitsFile(filename);
     % fitsfile = FitsFile(filename, dirpath);
+    % fitsfile = FitsFile(filename, dirpath, LoadFile=false);
     %
     % Without dirpath, filename is considered as the file path to the file.
     %
-    % INPUTS
-    % ------
+    % Input Arguments:
+    % ----------------
     % filename: string | char
     %   Name of the file or file path.
     %
     % dirpath: string | char
     %   Directory of the file exist.
     %
+    % Name-Value Input Arguments:
+    % ---------------------------
+    % LoadFile: boolean
+    %   whether or not to load file. (default) true
 
     properties
         filepath  % File path to the fits file
@@ -34,7 +39,7 @@ classdef FitsFile < dynamicprops
     end
 
     methods
-        function obj = FitsFile(filename, dirpath)
+        function obj = FitsFile(filename, dirpath, kwargs)
             % Constructor of class FitsFile
             %
             % Syntax:
@@ -45,16 +50,28 @@ classdef FitsFile < dynamicprops
             % file.
             %
             % Input Arguments:
+            % ----------------
             % filename: string | char
             %   Name of the file or file path.
             %
             % dirpath: string | char
             %   Directory of the file exist.
+            % 
+            % Name-Value Input Arguments:
+            % ---------------------------
+            % LoadFile: boolean
+            %   whether or not to load file. (default) true
+            %
+
             arguments
                 filename {mustBeTextScalar} = ""
                 dirpath {mustBeTextScalar} = ""
-
+                kwargs.LoadFile = true
             end
+            load_file = kwargs.LoadFile;
+
+            assert_bin(load_file, "LoadFile");
+
             import matlab.io.*;
 
             obj.filename = string(filename);
@@ -62,7 +79,7 @@ classdef FitsFile < dynamicprops
 
             obj.filepath = fullfile(dirpath, filename);
 
-            if exist(obj.filepath, "file")
+            if load_file && exist(obj.filepath, "file")
                obj.read();
             end
         end
@@ -86,21 +103,25 @@ classdef FitsFile < dynamicprops
             fptr = fits.openFile(obj.filepath);
     
             obj.numHDUs = fits.getNumHDUs(fptr);
+            hducell = cell(1, obj.numHDUs);
             for i=1:obj.numHDUs
-                obj.HDU = [obj.HDU FitsHDU(fptr, i)];
+                hducell{i} = FitsHDU(fptr, i);
             end
-            obj.Primary = obj.HDU(1);
+            fits.closeFile(fptr);
 
+            obj.HDU = [hducell{:}];
+            obj.Primary = obj.HDU(1);
             for i=2:obj.numHDUs
                 fldname = strrep(obj.HDU(i).name, " ", "_");
                 if ~isprop(obj, fldname)
                     obj.addprop(fldname);
+                    obj.(fldname) = obj.HDU(i);
+                else
+                    obj.(fldname) = [obj.(fldname) obj.HDU(i)];
                 end
-                obj.(fldname) = obj.HDU(i);
+                
             end
-
-            fits.closeFile(fptr);
-
+            
         end
     end
 end
